@@ -1,0 +1,12 @@
+graph g{
+    New_York -- Los_Angeles [label="2.37"];
+    Chicago -- Houston [label="1.88"];
+    Phoenix -- Philadelphia [label="3.59"];
+    San_Antonio -- San_Diego [label="4.12"];
+    Dallas -- San_Jose [label="2.91"];
+    Los_Angeles -- Chicago [label="3.05"];
+    Houston -- Phoenix [label="2.76"];
+    Philadelphia -- San_Antonio [label="3.98"];
+    San_Diego -- Dallas [label="2.64"];
+    San_Jose -- New_York [label="4.75"];
+    }
