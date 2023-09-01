@@ -1,0 +1,1 @@
+This application uses a digraph to connect multiple post offices around America. The input file is read in as a .DOT file, and the Frontend uses a JavaFX interface to allow for an easy user experience. The primary data structure of this application is a weighted DiGraph, which includes the connections between the post offices as well as their travel time (i.e. weights).
