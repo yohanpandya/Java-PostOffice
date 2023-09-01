@@ -1,0 +1,112 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+public class BackendBD implements BackendInterfaceBD {
+
+    ArrayList<PackageCenterDW> centers = new ArrayList<PackageCenterDW>();
+    Hashtable<Integer, PackageCenterDW> mapping = new Hashtable<>();
+    AEFunctionalGraph<PackageCenterDW, Double> graph = new AEFunctionalGraph<>();
+
+
+    @Override
+    public void readAll(String fileName) {
+        // TODO Auto-generated method stub
+        PackageReaderDW pack = new PackageReaderDW();
+        try {
+            centers = pack.read(new File(fileName));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        for (int i = 0; i < centers.size(); i++) {
+            mapping.put(centers.get(i).getMatrixPosition(), centers.get(i));
+        }
+        graph.readGraph(pack.getWeightsMatrix(),mapping);
+    }
+
+    @Override
+    public List<PackageCenterDW> shortestPath(PackageCenterDW start, PackageCenterDW end) {
+        // TODO Auto-generated method stub
+        List<PackageCenterDW> temp;
+        temp = graph.shortestPathData(start, end);
+        return temp;
+    }
+
+    @Override
+    public String length(List<PackageCenterDW> shortest) {
+        // TODO Auto-generated method stub
+
+        int length = shortest.size();
+        if (length == 1) {
+            return "Your package will be deliever to " + shortest.get(length) + " in 1 or less days";
+        }
+
+        if (length == 2) {
+            return "The Postal Service will deliever your package to "
+                    + shortest.get(shortest.size() - 1).getName() + " in 1-2 days";
+        } else if (length <= 4) {
+            String message =
+                    "Your package will have to go through " + length + " package centers which are ";
+            for (int i = 1; i < length; i++) {
+                if (i == length - 1) {
+                    message += "and " + shortest.get(i).getName() + " ";
+                    continue;
+                }
+                message += shortest.get(i).getName() + ", ";
+            }
+            message += "and FedEx will deliever your package to "
+                    + shortest.get(shortest.size() - 1).getName() + " in 3-5 days";
+            return message;
+        } else if (length <= 6) {
+            String message =
+                    "Your package will have to go through " + length + " package centers which are ";
+            for (int i = 1; i < length; i++) {
+                if (i == length - 1) {
+                    message += "and " + shortest.get(i).getName() + " ";
+                    continue;
+                }
+                message += shortest.get(i).getName() + ", ";
+            }
+            message += "and will take a plane before FedEx will deliever your package to "
+                    + shortest.get(shortest.size() - 1).getName() + " in 6-10 days";
+            return message;
+        } else {
+            String message =
+                    "Your package will have to go through " + length + " package centers which are ";
+            for (int i = 1; i < length; i++) {
+                if (i == length - 1) {
+                    message += "and " + shortest.get(i).getName() + " ";
+                    continue;
+                }
+                message += shortest.get(i).getName() + ", ";
+            }
+            message += "and will take a plane before FedEx will deliever your package to "
+                    + shortest.get(shortest.size() - 1).getName() + " in 11-15 days";
+            return message;
+        }
+    }
+
+    @Override
+    public PackageCenterDW getPackageCenterByName(String str) {
+        // TODO Auto-generated method stub
+        PackageCenterDW find = new PackageCenterDW(str, 1);
+        ArrayList<PackageCenterDW> all = (ArrayList<PackageCenterDW>) graph.getAllNodes();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getName().equals(str)) {
+                return all.get(i);
+            }
+        }
+        return null;
+    }
+
+    public List<PackageCenterDW> allPackages() {
+        return centers;
+    }
+
+    public double shortestPathCost(PackageCenterDW start, PackageCenterDW end) {
+        return graph.shortestPathCost(start,end);
+    }
+}
